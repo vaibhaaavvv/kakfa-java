@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -18,6 +19,9 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
+      ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
+      oos.writeObject(new Response(100, "correlation_id=7", "Hello, World!"));
+      oos.flush();
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
     } finally {
