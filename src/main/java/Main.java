@@ -1,8 +1,8 @@
-import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class Main {
   public static void main(String[] args){
@@ -21,18 +21,15 @@ public class Main {
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
 
-      // Get Byte input stream aka request
-      BufferedInputStream in = new BufferedInputStream(clientSocket.getInputStream());
-      // Read first four bytes i.e. message size
-      byte[] messageSizeBytes = in.readNBytes(4);
-      // fetch correlation id
-      int correlationId = ByteBuffer.wrap(in.readNBytes(4)).getInt();
-      // write a message size to response
-      clientSocket.getOutputStream().write(messageSizeBytes);
-      // write correlation id to response
-      var res = ByteBuffer.allocate(4).putInt(correlationId).array();
-      clientSocket.getOutputStream().write(res);    
-      clientSocket.getOutputStream().write(new byte[]{0, 35});
+      InputStream is = clientSocket.getInputStream();
+      byte[] length = is.readNBytes(4);
+      byte[] api_key = is.readNBytes(2);
+      byte[] api_ver = is.readNBytes(2);
+      byte[] correlId = is.readNBytes(4);
+      OutputStream os = clientSocket.getOutputStream();
+      os.write(length);
+      os.write(correlId);
+      os.write(new byte[] {0, 35});
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
     } finally {
