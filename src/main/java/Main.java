@@ -25,17 +25,10 @@ public class Main {
       BufferedInputStream in = new BufferedInputStream(clientSocket.getInputStream());
       // Read first four bytes i.e. message size
       byte[] messageSizeBytes = in.readNBytes(4);
-       // Read next two bytes i.e. api key
-      byte[] apiKey = in.readNBytes(2);
-      byte[] apiVersionByte = in.readNBytes(2);
       // fetch correlation id
       int correlationId = ByteBuffer.wrap(in.readNBytes(4)).getInt();
       // write a message size to response
       clientSocket.getOutputStream().write(messageSizeBytes);
-      // write api key to response
-      clientSocket.getOutputStream().write(apiKey);
-      // write api version to response
-      clientSocket.getOutputStream().write(apiVersionByte);
       // write correlation id to response
       var res = ByteBuffer.allocate(4).putInt(correlationId).array();
       clientSocket.getOutputStream().write(res);    
