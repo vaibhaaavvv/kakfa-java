@@ -1,3 +1,4 @@
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -20,14 +21,13 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
-      // clientSocket.getOutputStream().write(new byte[] {0, 0, 0, 0, 0, 0, 0, 7});
       InputStream in = clientSocket.getInputStream();
-      byte[] headerPrefix = in.readNBytes(8);
-      ByteBuffer headerBuffer = ByteBuffer.wrap(headerPrefix);
-
-      short requestApiKey = headerBuffer.getShort();
-      short requestApiVersion = headerBuffer.getShort();
-      int correlationId = headerBuffer.getInt();
+      BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
+      // byte[] message_size = bufferedInputStream.readNBytes(4);
+      // byte[] request_api_key = bufferedInputStream.readNBytes(2);
+      // byte[] request_api_version = bufferedInputStream.readNBytes(2);
+      byte[] correlation_id = bufferedInputStream.readNBytes(4);
+      clientSocket.getOutputStream().write(ByteBuffer.allocate(4).put(correlation_id).array());
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
     } finally {
