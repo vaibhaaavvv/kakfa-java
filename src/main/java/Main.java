@@ -20,7 +20,7 @@ public class Main {
       serverSocket.setReuseAddress(true);
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
-      clientSocket.getOutputStream().write(new byte[] {0, 0, 0, 0, 0, 0, 0, 7});
+      // clientSocket.getOutputStream().write(new byte[] {0, 0, 0, 0, 0, 0, 0, 7});
       InputStream in = clientSocket.getInputStream();
       byte[] headerPrefix = in.readNBytes(8);
       ByteBuffer headerBuffer = ByteBuffer.wrap(headerPrefix);
