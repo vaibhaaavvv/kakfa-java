@@ -38,12 +38,8 @@ public class Main {
       clientSocket.getOutputStream().write(apiVersionByte);
       // write correlation id to response
       var res = ByteBuffer.allocate(4).putInt(correlationId).array();
-      int apiVersion = ByteBuffer.wrap(apiVersionByte).getInt();
       clientSocket.getOutputStream().write(res);    
-      if (apiVersion > 5 || apiVersion < 0){
-        // write error code to response
-        clientSocket.getOutputStream().write(ByteBuffer.allocate(2).putInt(35).array());
-      }
+      clientSocket.getOutputStream().write(new byte[]{0, 35});
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
     } finally {
