@@ -42,7 +42,7 @@ public class Main {
       clientSocket.getOutputStream().write(res);    
       if (apiVersion > 5 || apiVersion < 0){
         // write error code to response
-        clientSocket.getOutputStream().write(ByteBuffer.allocate(2).putInt(35));
+        clientSocket.getOutputStream().write(ByteBuffer.allocate(2).putInt(35).array());
       }
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
