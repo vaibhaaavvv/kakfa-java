@@ -23,10 +23,11 @@ public class Main {
       clientSocket = serverSocket.accept();
       InputStream in = clientSocket.getInputStream();
       BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
-      // byte[] message_size = bufferedInputStream.readNBytes(4);
-      // byte[] request_api_key = bufferedInputStream.readNBytes(2);
-      // byte[] request_api_version = bufferedInputStream.readNBytes(2);
+      byte[] message_size = bufferedInputStream.readNBytes(4);
+      byte[] request_api_key = bufferedInputStream.readNBytes(2);
+      byte[] request_api_version = bufferedInputStream.readNBytes(2);
       byte[] correlation_id = bufferedInputStream.readNBytes(4);
+      System.out.println("correlation_id: " + ByteBuffer.wrap(in.readNBytes(4)).getInt());
       clientSocket.getOutputStream().write(ByteBuffer.allocate(4).put(correlation_id).array());
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
