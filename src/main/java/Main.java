@@ -1,6 +1,8 @@
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class Main {
   public static void main(String[] args){
@@ -19,6 +21,13 @@ public class Main {
       // Wait for connection from client.
       clientSocket = serverSocket.accept();
       clientSocket.getOutputStream().write(new byte[] {0, 0, 0, 0, 0, 0, 0, 7});
+      InputStream in = clientSocket.getInputStream();
+      byte[] headerPrefix = in.readNBytes(8);
+      ByteBuffer headerBuffer = ByteBuffer.wrap(headerPrefix);
+
+      short requestApiKey = headerBuffer.getShort();
+      short requestApiVersion = headerBuffer.getShort();
+      int correlationId = headerBuffer.getInt();
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
     } finally {
