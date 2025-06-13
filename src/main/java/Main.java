@@ -40,6 +40,7 @@ public class Main {
       responseBodyStream.writeShort(4);
 
       responseBodyStream.writeInt(0);
+      writeUnsignedVarInt(0, responseBodyStream);
       responseBodyStream.flush();
       byte[] responseBody = responseBodyBuffer.toByteArray();
 
@@ -65,5 +66,13 @@ public class Main {
         System.out.println("IOException: " + e.getMessage());
       }
     }
+  }
+
+  public static void writeUnsignedVarInt(int value, DataOutputStream dos) throws IOException {
+    while ((value & 0xFFFFFF80) != 0L) {
+      dos.writeByte((value & 0x7F) | 0x80);
+      value >>>= 7;
+    }
+    dos.writeByte(value & 0x7F);
   }
 }
