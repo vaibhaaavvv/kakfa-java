@@ -3,7 +3,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class Main {
   public static void main(String[] args){
@@ -28,42 +27,8 @@ public class Main {
       byte[] api_ver = is.readNBytes(2);
       byte[] correlId = is.readNBytes(4);
       OutputStream os = clientSocket.getOutputStream();
-      
-      ByteBuffer responseBody = ByteBuffer.allocate(1024);
-      
-      responseBody.putShort((short) 0);
-      
-      responseBody.putInt(3);
-      
-      responseBody.putShort((short) 18);
-      responseBody.putShort((short) 0);
-      responseBody.putShort((short) 4);
-      
-      responseBody.putShort((short) 0);
-      responseBody.putShort((short) 0);
-      responseBody.putShort((short) 9);
-      
-      responseBody.putShort((short) 1);
-      responseBody.putShort((short) 0);
-      responseBody.putShort((short) 12);
-      
-      responseBody.putInt(0);
-      
-
-      byte[] bodyBytes = new byte[responseBody.position()];
-      responseBody.rewind();
-      responseBody.get(bodyBytes);
-      
-      int responseLength = 4 + bodyBytes.length; 
-      
-      // Send response header
-      os.write(intToBytes(responseLength));  
-      os.write(correlId);                    
-      
-      // Send response body
-      os.write(bodyBytes);
-      
-      os.flush();
+      os.write(length);
+      os.write(correlId);
       os.write(new byte[] {0, 35});
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
