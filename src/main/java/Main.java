@@ -42,13 +42,4 @@ public class Main {
       }
     }
   }
-
-  private static byte[] intToBytes(int value) {
-    return new byte[] {
-      (byte) (value >> 24),
-      (byte) (value >> 16),
-      (byte) (value >> 8),
-      (byte) value
-    };
-  }
 }
