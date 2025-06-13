@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,6 +29,28 @@ public class Main {
       byte[] api_ver = is.readNBytes(2);
       byte[] correlId = is.readNBytes(4);
       OutputStream os = clientSocket.getOutputStream();
+      ByteArrayOutputStream responseBodyBuffer = new ByteArrayOutputStream();
+      DataOutputStream responseBodyStream = new DataOutputStream(responseBodyBuffer);
+      responseBodyStream.write(correlId);
+      responseBodyStream.writeShort(0);
+      responseBodyStream.writeInt(1);
+
+      responseBodyStream.writeShort(18);  // ApiKey
+      responseBodyStream.writeShort(0);   // MinVersion
+      responseBodyStream.writeShort(4);
+
+      responseBodyStream.writeInt(0);
+      responseBodyStream.flush();
+      byte[] responseBody = responseBodyBuffer.toByteArray();
+
+      int responseLength = responseBody.length;
+
+      DataOutputStream dos = new DataOutputStream(os);
+
+      dos.writeInt(responseLength);
+
+      dos.write(responseBody);
+      
       os.write(length);
       os.write(correlId);
       os.write(new byte[] {0, 35});
