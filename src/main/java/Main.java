@@ -27,6 +27,7 @@ public class Main {
       byte[] api_ver = is.readNBytes(2);
       byte[] correlId = is.readNBytes(4);
       OutputStream os = clientSocket.getOutputStream();
+      
       os.write(length);
       os.write(correlId);
       os.write(new byte[] {0, 35});
